@@ -15,7 +15,7 @@ class PXConnector:
     def __init__(self):
         """ constructor """
         # self.Logger = Logger
-        self.path = "/dev/ttyUSB1"
+        self.path = "/dev/ttyUSB0"
         self.vehicleExists = 0
         print('Connecting to PX4 on %s' % self.path)
         self.vehicle = connect(self.path, baud=57600)
@@ -46,7 +46,7 @@ class PXConnector:
         #     print(str(e))
 
     def setModeGuided(self):
-        self.vehicle.mode = VehicleMode("GUIDED")
+        self.vehicle.mode = VehicleMode("POSITION")
 
     def Connect(self):
         result = 1

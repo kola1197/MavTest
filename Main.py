@@ -36,13 +36,13 @@ class Main:
         self.PX.vehicle.channels.overrides(ch)
 
     def MAVListener(self, msg, name):
-        #print(name)
-        #print(msg)
+        # print(name)
+        # print(msg)
         if ("COMMAND_INT" in str(msg) and self.first):
             print(msg)
             self.first = False
             self.savedMSG = msg
-        pass #print(msg)
+        pass  # print(msg)
 
     def stopWork(self):
         print('stop')
@@ -54,34 +54,37 @@ class Main:
         if s == 'stop' or s == 'Stop':
             self.stopWork()
         if s == 'W' or s == 'w':
-            print("Going towards second point  (groundspeed set to 10 m/s) ...")
+            print("w:: 0, 0, 10")
             # point1 = self.PX.vehicle.
             point2 = LocationGlobalRelative(60, 30, 80)
-            self.PX.vehicle.simple_goto(point2, groundspeed=20)
+            self.SendSET_POSITION_TARGET_LOCAL_NED(0, 0, 10)
         if s == 'S' or s == 's':
-            print("Going backwards second point  (groundspeed set to 10 m/s) ...")
+            print("s:: 0, 0, -10")
             point2 = LocationGlobalRelative(61, 31, 80)
-            self.PX.vehicle.simple_goto(point2, groundspeed=20)
+            self.SendSET_POSITION_TARGET_LOCAL_NED(0, 0, -10)
         if s == 'A' or s == 'a':
-            print("Going left second point  (groundspeed set to 10 m/s) ...")
+            print("A:: 10, 0, 0")
             point2 = LocationGlobalRelative(60, 31, 80)
-            self.PX.vehicle.simple_goto(point2, groundspeed=20)
+            self.SendSET_POSITION_TARGET_LOCAL_NED(10, 0, 0)
         if s == 'D' or s == 'd':
-            print("Going right second point  (groundspeed set to 10 m/s) ...")
+            print("d:: -10, 0, 0")
             point2 = LocationGlobalRelative(61, 30, 80)
-            self.PX.vehicle.simple_goto(point2, groundspeed=20)
-        if s == 'R' or s == 'r':
+            self.SendSET_POSITION_TARGET_LOCAL_NED(-10, 0, 0)
+        if s == 'P' or s == 'p':
+            print("POSITION mode")
+            self.PX.setModeGuided()
+        '''if s == 'R' or s == 'r':
             print("Going right second point  (groundspeed set to 10 m/s) ...")
             self.PX.vehicle.mode = VehicleMode("RTL")
         if s == 'Q' or s == 'q':
             print("Going target local point  (groundspeed set to 10 m/s) ...")
-            #self.PX.vehicle.goto_position_target_local_ned(30, 60, 60)
+            # self.PX.vehicle.goto_position_target_local_ned(30, 60, 60)
             msg = self.PX.vehicle.message_factory.set_position_target_local_ned_encode(
                 0,  # time_boot_ms (not used)
-                1,1,  # target system, target component
+                1, 1,  # target system, target component
                 mavutil.mavlink.MAV_FRAME_LOCAL_NED,  # frame
                 0b0000111111111000,  # type_mask (only positions enabled)
-                30,60,60,  # x, y, z positions (or North, East, Down in the MAV_FRAME_BODY_NED frame
+                30, 60, 60,  # x, y, z positions (or North, East, Down in the MAV_FRAME_BODY_NED frame
                 0, 0, 0,  # x, y, z velocity in m/s  (not used)
                 0, 0, 0,  # x, y, z acceleration (not supported yet, ignored in GCS_Mavlink)
                 0, 0)  # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
@@ -89,10 +92,10 @@ class Main:
             self.PX.vehicle.send_mavlink(msg)
         if s == 'Z' or s == 'z':
             print("Going target local point  (groundspeed set to 10 m/s) ...")
-            #self.PX.vehicle.goto_position_target_local_ned(30, 60, 60)
+            # self.PX.vehicle.goto_position_target_local_ned(30, 60, 60)
             msg = self.PX.vehicle.message_factory.set_position_target_global_int_encode(
                 0,  # time_boot_ms (not used)
-                1,1,  # target system, target component
+                1, 1,  # target system, target component
                 mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT_INT,  # frame
                 0b0000111111000111,  # type_mask (only speeds enabled)
                 0,  # lat_int - X Position in WGS84 frame in 1e7 * meters
@@ -110,7 +113,7 @@ class Main:
         if s == 'C' or s == 'c':
             print("Going target local point  (groundspeed set to 10 m/s) ...")
             msg = self.PX.vehicle.message_factory.command_long_encode(
-                1,1,  # target system, target component
+                1, 1,  # target system, target component
                 mavutil.mavlink.MAV_CMD_CONDITION_YAW,  # command
                 0,  # confirmation
                 30,  # param 1, yaw in degrees
@@ -123,7 +126,7 @@ class Main:
         if s == 'x' or s == 'X':
             print("Going target local point  (groundspeed set to 10 m/s) ...")
             msg = self.PX.vehicle.message_factory.command_long_encode(
-                1,1,  # target system, target component
+                1, 1,  # target system, target component
                 mavutil.mavlink.MAV_CMD_CONDITION_YAW,  # command
                 1,  # confirmation
                 20,  # param 1, yaw in degrees
@@ -136,7 +139,7 @@ class Main:
             print("Going target local point  (groundspeed set to 10 m/s) ...")
             msg = self.PX.vehicle.message_factory.set_position_target_local_ned_encode(
                 0,  # time_boot_ms (not used)
-                1,1,  # target system, target component
+                1, 1,  # target system, target component
                 mavutil.mavlink.MAV_FRAME_LOCAL_NED,  # frame
                 0b0000111111111000,  # type_mask (only positions enabled)
                 1000, 1000, -100,  # x, y, z positions (or North, East, Down in the MAV_FRAME_BODY_NED frame
@@ -154,7 +157,8 @@ class Main:
             print("Going target local point  (groundspeed set to 10 m/s) ...")
             msg = self.PX.vehicle.message_factory.command_int_encode(
                 1, 1,  # target system, target component
-                0, 192, 0, 0, -1, 1, 0, 0, 598759654, 307199456, 234.92)  # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
+                0, 192, 0, 0, -1, 1, 0, 0, 598759654, 307199456,
+                234.92)  # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
             # send command to vehicle
             self.PX.vehicle.send_mavlink(msg)
         if s == 'l' or s == 'L':
@@ -163,15 +167,28 @@ class Main:
                 1, 1,  # target system, target component
                 0, 192, 0, 0, -1, 1, 0, 0, 608759654, 317199456,
                 234.92)  # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
-               # send command to vehicle
+            # send command to vehicle
             self.PX.vehicle.send_mavlink(msg)
         if s == 'G' or s == 'g':
             print("Going target local point  (groundspeed set to 10 m/s) ...")
-            #self.savedMSG.x=598800000
-            self.PX.vehicle.send_mavlink(self.savedMSG)
+            # self.savedMSG.x=598800000
+            self.PX.vehicle.send_mavlink(self.savedMSG)'''
 
-    #COMMAND_INT {target_system : 1, target_component : 1, frame : 0, command : 192, current : 0,
+    # COMMAND_INT {target_system : 1, target_component : 1, frame : 0, command : 192, current : 0,
     # autocontinue : 0, param1 : -1.0, param2 : 1.0, param3 : 0.0, param4 : nan, x : 598764140, y : 307225294, z : 62.0359992980957}
+
+    def SendSET_POSITION_TARGET_LOCAL_NED(self, x, y, z):
+        msg = self.PX.vehicle.message_factory.set_position_target_local_ned_encode(
+            0,  # time_boot_ms (not used)
+            1, 1,  # target system, target component
+            mavutil.mavlink.MAV_FRAME_LOCAL_NED,  # frame
+            0b0000111111111000,  # type_mask (only positions enabled)
+            x, y, z,  # x, y, z positions (or North, East, Down in the MAV_FRAME_BODY_NED frame
+            0, 0, 0,  # x, y, z velocity in m/s  (not used)
+            0, 0, 0,  # x, y, z acceleration (not supported yet, ignored in GCS_Mavlink)
+            0, 0)  # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
+        # send command to vehicle
+        self.PX.vehicle.send_mavlink(msg)
 
     def CreateServer(self):
         # self.PX.Connect()
