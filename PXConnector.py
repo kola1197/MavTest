@@ -7,7 +7,7 @@ class PXConnector:
     def __init__(self, path):
         self.path = path
         self.vehicleExists = 0
-        self.vehicle = connect(self.path, 57600)
+        self.vehicle = connect(self.path)
         print('Connecting to PX4 on %s' % self.path)
 
         # self.ReactToMsg = _ReactToMsg
@@ -15,10 +15,10 @@ class PXConnector:
     def __init__(self):
         """ constructor """
         # self.Logger = Logger
-        self.path = "/dev/ttyUSB0"
+        self.path = "/dev/ttyACM0"
         self.vehicleExists = 0
         print('Connecting to PX4 on %s' % self.path)
-        self.vehicle = connect(self.path, baud=57600)
+        self.vehicle = connect(self.path, baud=115200, wait_ready=True)
         #self.vehicle.wait_ready(True, raise_exeption=False)
         print('PX4 connected')
         #fn = self.react

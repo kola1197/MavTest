@@ -93,29 +93,37 @@ class Main:
         self.PX.vehicle.send_mavlink(msg)
 
     def SendCh(self):
+        print (self.ch)
         self.PX.vehicle.channels.overrides = {'1': self.ch[0], '2': self.ch[1], '3': self.ch[2], '4': self.ch[3]}
 
     def threadVoid(self):
-        # while (not self.__stop):
-        time.sleep(0.03)
-
+        while (not self.__stop):
+            time.sleep(0.03)
+            self.SendCh()
     def CreateServer(self):
         # self.PX.Connect()
         self.MAV.Start()
         self.PX.vehicle._handler.pipe(self.MAV.conn)
+        self.PX.vehicle.armed = True
         print("started")
-        threading.Timer(0.03, self.SendCh).start()
-        self.PX.setModeGuided()  # vehicle.mode = VehicleMode("GUIDED")
+        #threading.Timer(0.03, self.SendCh).start()
+        thread1 = threading.Thread(target=self.threadVoid)
+        thread1.start()
+        #self.PX.setModeGuided()  # vehicle.mode = VehicleMode("GUIDED")
         while not self.__stop:
             self.ch = [1500, 1500, 1500, 1500]
             if keyboard.is_pressed('a'):
-                self.ch[0] += 100
+                self.ch[0] += 500
+                print('::a')
             if keyboard.is_pressed('d'):
-                self.ch[0] -= 100
+                self.ch[0] -= 500
+                print('::d')
             if keyboard.is_pressed('w'):
-                self.ch[1] += 100
+                self.ch[2] += 500
+                print('::w')
             if keyboard.is_pressed('s'):
-                self.ch[1] -= 100
+                self.ch[2] -= 500
+                print('::s')
             # s = raw_input()
             # self.ReactToConsoleMsg(s)
         # while True:
